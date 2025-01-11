@@ -22,7 +22,7 @@ return {
     'jay-babu/mason-nvim-dap.nvim',
 
     -- Add your own debuggers here
-    'leoluz/nvim-dap-go',
+    --'leoluz/nvim-dap-go',
   },
   keys = {
     -- Basic debugging keymaps, feel free to change to your liking!
@@ -34,14 +34,14 @@ return {
       desc = 'Debug: Start/Continue',
     },
     {
-      '<F1>',
+      '<F9>',
       function()
         require('dap').step_into()
       end,
       desc = 'Debug: Step Into',
     },
     {
-      '<F2>',
+      '<F10>',
       function()
         require('dap').step_over()
       end,
@@ -94,7 +94,7 @@ return {
       -- online, please don't ask me how to install them :)
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
-        'delve',
+        --'delve',
       },
     }
 
@@ -137,11 +137,27 @@ return {
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
     -- Install golang specific config
-    require('dap-go').setup {
-      delve = {
-        -- On Windows delve must be run attached or it crashes.
-        -- See https://github.com/leoluz/nvim-dap-go/blob/main/README.md#configuring
-        detached = vim.fn.has 'win32' == 0,
+    -- require('dap-go').setup {
+    --  delve = {
+    --    -- On Windows delve must be run attached or it crashes.
+    --    -- See https://github.com/leoluz/nvim-dap-go/blob/main/README.md#configuring
+    --    detached = vim.fn.has 'win32' == 0,
+    --  },
+    --}
+
+    -- gdscript
+    dap.adapters.godot = {
+      type = 'server',
+      host = '127.0.0.1',
+      port = 6006,
+    }
+
+    dap.configurations.gdscript = {
+      {
+        type = 'godot',
+        request = 'launch',
+        name = 'Launch scene',
+        project = '${workspaceFolder}',
       },
     }
   end,

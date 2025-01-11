@@ -667,6 +667,8 @@ require('lazy').setup({
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
       require('mason-lspconfig').setup {
+        ensure_installed = {},
+        automatic_installation = {},
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
@@ -677,6 +679,17 @@ require('lazy').setup({
             require('lspconfig')[server_name].setup(server)
           end,
         },
+      }
+
+      local lspconfig = require 'lspconfig'
+
+      -- Gdscript
+      lspconfig.gdscript.setup {
+        force_setup = true, -- because the LSP is global. Read more on lsp-zero docs about this.
+        single_file_support = false,
+        cmd = { 'ncat', '127.0.0.1', '6005' }, -- the important trick for Windows!
+        root_dir = require('lspconfig.util').root_pattern('project.godot', '.git'),
+        filetypes = { 'gd', 'gdscript', 'gdscript3' },
       }
     end,
   },
@@ -791,7 +804,7 @@ require('lazy').setup({
           -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
-          ['<C-y>'] = cmp.mapping.confirm { select = true },
+          ['<C-Space>'] = cmp.mapping.confirm { select = true },
           ['<C-e>'] = cmp.mapping.abort(),
 
           -- If you prefer more traditional completion keymaps,
@@ -803,7 +816,7 @@ require('lazy').setup({
           -- Manually trigger a completion from nvim-cmp.
           --  Generally you don't need this, because nvim-cmp will display
           --  completions whenever it has completion options available.
-          ['<C-Space>'] = cmp.mapping.complete {},
+          ['<C-.>'] = cmp.mapping.complete {},
 
           -- Think of <c-l> as moving to the right of your snippet expansion.
           --  So if you have a snippet that's like:
@@ -934,7 +947,7 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
