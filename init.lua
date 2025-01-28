@@ -632,7 +632,7 @@ require('lazy').setup({
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
         --
-
+        zls = {},
         lua_ls = {
           -- cmd = { ... },
           -- filetypes = { ... },
@@ -810,6 +810,27 @@ require('lazy').setup({
           --  This will expand snippets if the LSP sent a snippet.
           ['<CR>'] = cmp.mapping.confirm { select = true },
           ['<C-e>'] = cmp.mapping.abort(),
+
+          -- Super-Tab like mapping
+          ['<Tab>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_next_item()
+            elseif luasnip.locally_jumpable(1) then
+              luasnip.jump(1)
+            else
+              fallback()
+            end
+          end, { 'i', 's' }),
+
+          ['<S-Tab>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_prev_item()
+            elseif luasnip.locally_jumpable(-1) then
+              luasnip.jump(-1)
+            else
+              fallback()
+            end
+          end, { 'i', 's' }),
 
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
