@@ -34,7 +34,7 @@ return {
       desc = 'Debug: Start/Continue',
     },
     {
-      '<F9>',
+      '<F11>',
       function()
         require('dap').step_into()
       end,
