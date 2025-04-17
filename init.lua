@@ -818,8 +818,6 @@ require('lazy').setup({
 
           -- Super-Tab like mapping
           ['<Tab>'] = cmp.mapping(function(fallback)
-            -- if cmp.visible() then
-            --   cmp.select_next_item()
             if luasnip.locally_jumpable(1) then
               luasnip.jump(1)
             else
