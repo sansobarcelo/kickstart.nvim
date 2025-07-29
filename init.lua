@@ -628,24 +628,14 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        clangd = {},
-        -- gdscript = {
-        --   flags = {
-        --     debounce_text_changes = 150,
-        --   },
-        -- },
-        zls = {},
+        clangd = {}, -- c/c++
+        zls = {}, -- zig
         lua_ls = {
-          -- cmd = { ... },
-          -- filetypes = { ... },
-          -- capabilities = {},
           settings = {
             Lua = {
               completion = {
                 callSnippet = 'Replace',
               },
-              -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-              -- diagnostics = { disable = { 'missing-fields' } },
             },
           },
         },
@@ -685,20 +675,6 @@ require('lazy').setup({
             require('lspconfig')[server_name].setup(server)
           end,
         },
-      }
-
-      local lspconfig = require 'lspconfig'
-
-      -- Gdscript
-      local port = os.getenv 'GDScript_Port' or '6005'
-      local cmd = vim.lsp.rpc.connect('127.0.0.1', port)
-
-      lspconfig.gdscript.setup {
-        force_setup = true, -- because the LSP is global. Read more on lsp-zero docs about this.
-        single_file_support = false,
-        cmd = cmd,
-        root_dir = require('lspconfig.util').root_pattern('project.godot', '.git'),
-        filetypes = { 'gd', 'gdscript', 'gdscript3' },
       }
     end,
   },
@@ -750,29 +726,14 @@ require('lazy').setup({
     'hrsh7th/nvim-cmp',
     event = 'InsertEnter',
     dependencies = {
-      -- Snippet Engine & its associated nvim-cmp source
       {
         'L3MON4D3/LuaSnip',
         build = (function()
-          -- Build Step is needed for regex support in snippets.
-          -- This step is not supported in many windows environments.
-          -- Remove the below condition to re-enable on windows.
           if vim.fn.has 'win32' == 1 or vim.fn.executable 'make' == 0 then
             return
           end
           return 'make install_jsregexp'
         end)(),
-        dependencies = {
-          -- `friendly-snippets` contains a variety of premade snippets.
-          --    See the README about individual language/framework/plugin snippets:
-          --    https://github.com/rafamadriz/friendly-snippets
-          -- {
-          --   'rafamadriz/friendly-snippets',
-          --   config = function()
-          --     require('luasnip.loaders.from_vscode').lazy_load()
-          --   end,
-          -- },
-        },
       },
       'saadparwaiz1/cmp_luasnip',
 
@@ -783,7 +744,6 @@ require('lazy').setup({
       'hrsh7th/cmp-path',
     },
     config = function()
-      -- See `:help cmp`
       local cmp = require 'cmp'
       local luasnip = require 'luasnip'
       luasnip.config.setup {}
