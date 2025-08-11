@@ -629,7 +629,9 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         clangd = {}, -- c/c++
-        zls = {}, -- zig
+        zls = {
+          cmd = { 'C:/dev/zig_0_14_1/zls/zig-out/bin/zls.exe' },
+        }, -- zig
         lua_ls = {
           settings = {
             Lua = {
